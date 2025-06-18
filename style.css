@@ -1,0 +1,27 @@
+*{  
+    margin: 0;
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+body{
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+header{
+    height: 70px;
+}
+
+main{
+    flex: 1;
+}
+
+footer{
+    height: 70px;
+    background-color: darkgray;
+}
+
