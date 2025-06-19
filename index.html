@@ -10,11 +10,18 @@
 <body onload="init()">
     <header>
         <h1>TIC TAC TOE GAME</h1>
+        <ul>
+            <button>Mit Freund Spielen</button>
+            <button>Mit Robot Spielen</button>
+        </ul>
     </header>
     <main>
+        <div id="current_player"></div>
         <div class="caintaner" id="container">
 
         </div>
+        <div id="winner_message"></div>
+        <button onclick="resetGame()">Neustarten</button>
     </main>
     <footer>
 
