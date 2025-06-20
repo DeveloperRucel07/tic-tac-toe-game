@@ -55,20 +55,20 @@ function handleClick(index, tdElement) {
   fields[index] = currentShape;
 
   tdElement.innerHTML =
-  currentShape === "circle" ? generateCircleSVG() : generateCrossSVG();
+    currentShape === "circle" ? generateCircleSVG() : generateCrossSVG();
   tdElement.onclick = null;
   const winnerCombo = checkWinner(currentShape);
   if (winnerCombo) {
     drawWinningLine(winnerCombo);
     document.getElementById("winner_message").textContent =
-      (currentShape === 'circle' ? "Kreis" : "Kreuz") + " gewinnt!";
+      (currentShape === "circle" ? "Kreis" : "Kreuz") + " Spieler gewinnt!";
     gameOver = true;
     return;
   }
 
   if (checkWinner(currentShape)) {
     document.getElementById("winner_message").textContent =
-      (currentShape === "circle" ? "Kreis" : "Kreuz") + " gewinnt!";
+      (currentShape === "circle" ? "Kreis" : "Kreuz") + " Spieler gewinnt!";
     gameOver = true;
     return;
   }
@@ -89,23 +89,21 @@ function checkWinner(player) {
   const winCombos = [
     [0, 1, 2],
     [3, 4, 5],
-    [6, 7, 8], 
+    [6, 7, 8],
     [0, 3, 6],
     [1, 4, 7],
-    [2, 5, 8], 
+    [2, 5, 8],
     [0, 4, 8],
-    [2, 4, 6], 
+    [2, 4, 6],
   ];
 
   for (const combo of winCombos) {
     if (combo.every((i) => fields[i] === player)) {
-      return combo; 
+      return combo;
     }
   }
   return null;
 }
-
-
 
 function drawWinningLine(indices) {
   const table = document.querySelector("table");
@@ -144,7 +142,6 @@ function drawWinningLine(indices) {
   table.parentElement.style.position = "relative";
   table.parentElement.appendChild(wrapper);
 }
-
 
 function computerMove() {
   const emptyIndices = fields
