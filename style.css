@@ -80,6 +80,10 @@ td {
   border: 5px solid white;
 }
 
+td:hover{
+  background-color: grey;
+}
+
 /* Nur innere Linien anzeigen (keine äußeren Ränder) */
 td:first-child {
   border-left: none;
