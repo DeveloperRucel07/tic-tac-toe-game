@@ -1,4 +1,5 @@
 let fields = [null, null, null, null, null, null, null, null, null];
+let singlePlayerMode = false;
 let currentShape = "circle";
 let gameOver = false;
 
@@ -7,6 +8,16 @@ function init() {
   render();
   document.getElementById("winner_message").textContent = "";
   document.getElementById("current_player").textContent = "Kreis am Zug";
+}
+
+function friendGame() {
+  singlePlayerMode = false;
+  resetGame();
+}
+
+function computer() {
+  singlePlayerMode = true;
+  resetGame();
 }
 
 function render() {
@@ -44,8 +55,16 @@ function handleClick(index, tdElement) {
   fields[index] = currentShape;
 
   tdElement.innerHTML =
-    currentShape === "circle" ? generateCircleSVG() : generateCrossSVG();
+  currentShape === "circle" ? generateCircleSVG() : generateCrossSVG();
   tdElement.onclick = null;
+  const winnerCombo = checkWinner(currentShape);
+  if (winnerCombo) {
+    drawWinningLine(winnerCombo);
+    document.getElementById("winner_message").textContent =
+      (currentShape === 'circle' ? "Kreis" : "Kreuz") + " gewinnt!";
+    gameOver = true;
+    return;
+  }
 
   if (checkWinner(currentShape)) {
     document.getElementById("winner_message").textContent =
@@ -54,35 +73,94 @@ function handleClick(index, tdElement) {
     return;
   }
 
-  if (fields.every((f) => f !== null)) {
+  if (fields.every((full) => full !== null)) {
     document.getElementById("winner_message").textContent = "Unentschieden!";
     gameOver = true;
     return;
   }
-
   currentShape = currentShape === "circle" ? "cross" : "circle";
   updateCurrentPlayer();
+  if (singlePlayerMode && currentShape === "cross" && !gameOver) {
+    setTimeout(computerMove, 500);
+  }
 }
 
-function checkWinner(shape) {
-  const winPatterns = [
+function checkWinner(player) {
+  const winCombos = [
     [0, 1, 2],
     [3, 4, 5],
-    [6, 7, 8],
+    [6, 7, 8], 
     [0, 3, 6],
     [1, 4, 7],
-    [2, 5, 8],
+    [2, 5, 8], 
     [0, 4, 8],
-    [2, 4, 6],
+    [2, 4, 6], 
   ];
 
-  return winPatterns.some((pattern) =>
-    pattern.every((index) => fields[index] === shape)
-  );
+  for (const combo of winCombos) {
+    if (combo.every((i) => fields[i] === player)) {
+      return combo; 
+    }
+  }
+  return null;
+}
+
+
+
+function drawWinningLine(indices) {
+  const table = document.querySelector("table");
+  const rect = table.getBoundingClientRect();
+  const tds = document.querySelectorAll("td");
+
+  const [first, , last] = indices;
+  const start = tds[first].getBoundingClientRect();
+  const end = tds[last].getBoundingClientRect();
+
+  const x1 = start.left + start.width / 2 - rect.left;
+  const y1 = start.top + start.height / 2 - rect.top;
+  const x2 = end.left + end.width / 2 - rect.left;
+  const y2 = end.top + end.height / 2 - rect.top;
+
+  const line = document.createElement("div");
+  line.style.position = "absolute";
+  line.style.left = `${x1}px`;
+  line.style.top = `${y1}px`;
+  line.style.width = `${Math.hypot(x2 - x1, y2 - y1)}px`;
+  line.style.height = "5px";
+  line.style.backgroundColor = "white";
+  line.style.transformOrigin = "left center";
+  line.style.transform = `rotate(${Math.atan2(y2 - y1, x2 - x1)}rad)`;
+  line.style.transition = "width 0.4s ease";
+
+  const wrapper = document.createElement("div");
+  wrapper.style.position = "absolute";
+  wrapper.style.top = "0";
+  wrapper.style.left = "0";
+  wrapper.style.width = `${rect.width}px`;
+  wrapper.style.height = `${rect.height}px`;
+  wrapper.style.pointerEvents = "none";
+  wrapper.appendChild(line);
+
+  table.parentElement.style.position = "relative";
+  table.parentElement.appendChild(wrapper);
+}
+
+
+function computerMove() {
+  const emptyIndices = fields
+    .map((val, idx) => (val === null ? idx : null))
+    .filter((val) => val !== null);
+  if (emptyIndices.length > 0) {
+    const randomIndex =
+      emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+    const cell = document.querySelectorAll("td")[randomIndex];
+    handleClick(randomIndex, cell);
+  }
 }
 
 function updateCurrentPlayer() {
-  const playerText = currentShape === 'circle' ? "Kreis ist am Zug" : "Kreuz ist am Zug";
+  const playerText =
+    currentShape === "circle" ? "Kreis ist am Zug" : "Kreuz ist am Zug";
   document.getElementById("current_player").innerHTML = playerText;
 }
 
