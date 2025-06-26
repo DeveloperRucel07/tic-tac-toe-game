@@ -105,3 +105,15 @@ footer {
   height: 70px;
   background-color: darkgray;
 }
+
+@media (max-width:420px) {
+  h1 {
+    font-size: 20px;
+    text-align: center;
+  }
+  button {
+    font-size: 16px;
+    margin: 5px;
+    padding: 5px;
+  }
+}
