@@ -1,6 +1,9 @@
-#TIC TAC TOE GAME MIT JAVASCRIPT
+#TIC TAC TOE GAME Coded with HTML, CSS and  JAVASCRIPT
 
-###Man kann entweder mit einem freund spielen oder gegen den Computer spielen
+###You can choose to play mit your friend or to Play alone with computer
+
+###Now Test:
+https://rucel-tsafack.developerakademie.net/tictactoe/index.html
 
 
 
